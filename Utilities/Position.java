@@ -1,5 +1,7 @@
 package Utilities;
 
+import java.util.Objects;
+
 /*
  * Position class is used to indicate position of Robot
  */
@@ -32,5 +34,22 @@ public class Position {
 		result.setY(this.getY() + p.getY());
 		
 		return result;
+	}
+	
+	// for testing
+	@Override
+	public boolean equals(Object obj) {
+		// self check
+		if (this == obj) return true;
+		
+		// null check
+		if (null == obj) return false;
+		
+		// type check and case
+		if (getClass() != obj.getClass()) return false;
+		
+		Position pos = (Position) obj;
+		return Objects.equals(this.getX(), pos.getX())
+				&& Objects.equals(this.getY(), pos.getY());
 	}
 }
