@@ -25,8 +25,14 @@ public class Robot {
 	
 	// change the direction of robot to desired direction - dir
 	private void changeDirection(String dir) {
-		while (!direction.first().getDirStr().equals(dir))
+		// null check
+		if (direction == null) return;
+		
+		for (int i = 0; i < direction.size(); i++){
+			if (direction.first().getDirStr().equals(dir))
+				return;
 			direction.rotate(1);
+		}
 	}
 	
 	// singleton pattern

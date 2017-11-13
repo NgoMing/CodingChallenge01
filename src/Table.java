@@ -25,6 +25,7 @@ public class Table {
 		System.out.println("RIGTH : turn right robot");
 		System.out.println("MOVE  : move robot forward 1 step");
 		System.out.println("REPORT: show the position and direction of the robot");
+		System.out.println("EXIT  : stop playing");
 		System.out.println("Any actions make robot fall will not be accepted - do nothing");
 		System.out.println("Any actions will be ignored if you have not placed a robot");
 	}
@@ -44,7 +45,7 @@ public class Table {
 							Integer.parseInt(robotState[1]));
 				if (checkValidMove(robot.getPredictPos())) {
 					robot.updatePos();
-					robot.updateDir(robotState[2]);
+					robot.updateDir(robotState[2].toUpperCase());
 				}
 			}
 			else {
@@ -59,9 +60,12 @@ public class Table {
 				}
 				else if ("REPORT".equals(str.toUpperCase()))
 					System.out.println(robot);
-			}
-			
+				else if ("EXIT".equals(str.toUpperCase()))
+					break;
+			}		
 		}
+		System.out.println("See you again!");
+		br.readLine();
 	}
 	
 	public static boolean checkValidMove(Position pos) {
