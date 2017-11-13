@@ -62,8 +62,9 @@ public class Robot {
 	
 	public void move() {
 		predictPos = pos.add(direction.first().getPos());
-		// check valid move from table class
-		// TODO
+	}
+	
+	public void update() {
 		pos = predictPos;
 	}
 	
