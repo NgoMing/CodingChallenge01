@@ -6,12 +6,12 @@ public class Robot {
 	// the position of robot
 	Position pos = new Position();											
 	// the position of robot if it move
-	Position predictPos;									
+	Position predictPos = new Position();									
 	// the direction of robot
 	CircularlyLinkedList<DirectionState> direction = new CircularlyLinkedList<>();	
 	private static Robot instance;
 	
-	// access methods for test
+	// access methods
 	public Position getPos() { return pos; }
 	public Position getPredictPos() { return predictPos; }
 	public DirectionState getCurrentDirection() { return direction.first(); }
@@ -52,6 +52,11 @@ public class Robot {
 	}
 	
 	// active methods
+	public void place(int x, int y) {
+		predictPos.setX(x);
+		predictPos.setY(y);
+	}
+	
 	public void left() {
 		direction.rotate(1);
 	}
@@ -64,8 +69,12 @@ public class Robot {
 		predictPos = pos.add(direction.first().getPos());
 	}
 	
-	public void update() {
+	public void updatePos() {
 		pos = predictPos;
+	}
+	
+	public void updateDir(String dir) {
+		changeDirection(dir);
 	}
 	
 	public String toString() {
