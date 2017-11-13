@@ -1,11 +1,20 @@
+package src;
 import Utilities.CircularlyLinkedList;
 import Utilities.Position;
 
 public class Robot {
-	Position pos;										// the position of robot
-	Position predictPos;								// the position of robot if it move
-	CircularlyLinkedList<DirectionState> direction;		// the direction of robot
+	// the position of robot
+	Position pos = new Position();											
+	// the position of robot if it move
+	Position predictPos;									
+	// the direction of robot
+	CircularlyLinkedList<DirectionState> direction = new CircularlyLinkedList<>();	
 	private static Robot instance;
+	
+	// access methods for test
+	public Position getPos() { return pos; }
+	public Position getPredictPos() { return predictPos; }
+	public DirectionState getCurrentDirection() { return direction.first(); }
 	
 	private void initDirection() {
 		direction.addFirst(new DirectionState("EAST",  new Position( 1,  0)));
@@ -21,16 +30,24 @@ public class Robot {
 	}
 	
 	// singleton pattern
-	private Robot() {
-		initDirection();
-	}
-	public Robot getInstance(int x, int y, String dir) {
+	private Robot() { initDirection(); }
+	public static Robot getInstance(int x, int y, String dir) {
 		if (instance == null) {
 			instance = new Robot();
 		}
 		instance.pos.setX(x);
 		instance.pos.setY(y);
 		instance.changeDirection(dir);
+		return instance;
+	}
+	public static Robot getInstance() {
+		if (instance == null) {
+			instance = new Robot();
+		}
+		// set default values
+		instance.pos.setX(0);
+		instance.pos.setY(0);
+		instance.changeDirection("NORTH");
 		return instance;
 	}
 	
@@ -46,12 +63,13 @@ public class Robot {
 	public void move() {
 		predictPos = pos.add(direction.first().getPos());
 		// check valid move from table class
+		// TODO
 		pos = predictPos;
 	}
 	
 	public String toString() {
-		return pos.getX() + ',' + 
-				pos.getY() + ',' +
+		return  Integer.toString(pos.getX()) + ',' + 
+				Integer.toString(pos.getY()) + ',' +
 				direction.first().getDirStr();
 	}
 }
