@@ -35,6 +35,7 @@ public class Table {
 		String str;
 		String[] parser;
 		String[] robotState;
+		Position placingPos;
 		boolean gameOver = false;
 		while (!gameOver) {
 			str = br.readLine();
@@ -45,25 +46,30 @@ public class Table {
 				robotState = parser[1].split(",");
 				// check enough information for X,Y,F
 				if (robotState.length == 3) {
-					robot = Robot.getInstance();
-					robot.place(Integer.parseInt(robotState[0]), Integer.parseInt(robotState[1]));
-					if (checkValidMove(robot.getPredictPos())) {
-						robot.updatePos();
-						robot.updateDir(robotState[2]);
+					placingPos = new Position(Integer.parseInt(robotState[0]), Integer.parseInt(robotState[1]));
+					if (checkValidMove(placingPos)) {
+						robot = Robot.getInstance();
+						robot.place(Integer.parseInt(robotState[0]), 
+								Integer.parseInt(robotState[1]),
+								robotState[2]);
 					}
 				}
 			} else if (parser.length == 1) {
 				switch (str.toUpperCase()) {
-				case "LEFT" : 
-					robot.left();
+				case "LEFT":
+					if (robot != null)
+						robot.left();
 					break;
 				case "RIGHT": 
-					robot.right();
+					if (robot != null)
+						robot.right();
 					break;
-				case "MOVE" :
-					robot.move();
-					if (checkValidMove(robot.getPredictPos()))
-						robot.updatePos();
+				case "MOVE":
+					if (robot != null) {
+						robot.move();
+						if (checkValidMove(robot.getPredictPos()))
+							robot.updatePos();
+					}
 					break;
 				case "REPORT":
 					System.out.println(robot);

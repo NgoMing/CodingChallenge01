@@ -58,9 +58,10 @@ public class Robot {
 	}
 	
 	// active methods
-	public void place(int x, int y) {
-		predictPos.setX(x);
-		predictPos.setY(y);
+	public void place(int x, int y, String dir) {
+		pos.setX(x);
+		pos.setY(y);
+		changeDirection(dir);
 	}
 	
 	public void left() {
@@ -77,10 +78,6 @@ public class Robot {
 	
 	public void updatePos() {
 		pos = predictPos;
-	}
-	
-	public void updateDir(String dir) {
-		changeDirection(dir);
 	}
 	
 	public String toString() {
