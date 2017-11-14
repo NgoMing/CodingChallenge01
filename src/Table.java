@@ -32,56 +32,10 @@ public class Table {
 	
 	public static void playGame() throws IOException {
 		BufferedReader  br = new BufferedReader(new InputStreamReader(System.in));
-		String str;
-		String[] parser;
-		String[] robotState;
-		Position placingPos;
 		boolean gameOver = false;
 		while (!gameOver) {
-			str = br.readLine();
-			parser = str.split(" ");
-			
-			// PLACE X,Y,F command
-			if ((parser.length == 2) && ("PLACE".equals(parser[0].toUpperCase()))) {
-				robotState = parser[1].split(",");
-				// check enough information for X,Y,F
-				if (robotState.length == 3) {
-					placingPos = new Position(Integer.parseInt(robotState[0]), Integer.parseInt(robotState[1]));
-					if (checkValidMove(placingPos)) {
-						robot = Robot.getInstance();
-						robot.place(Integer.parseInt(robotState[0]), 
-								Integer.parseInt(robotState[1]),
-								robotState[2]);
-					}
-				}
-			} else if (parser.length == 1) {
-				switch (str.toUpperCase()) {
-				case "LEFT":
-					if (robot != null)
-						robot.left();
-					break;
-				case "RIGHT": 
-					if (robot != null)
-						robot.right();
-					break;
-				case "MOVE":
-					if (robot != null) {
-						robot.move();
-						if (checkValidMove(robot.getPredictPos()))
-							robot.updatePos();
-					}
-					break;
-				case "REPORT":
-					System.out.println(robot);
-					break;
-				case "EXIT":
-					gameOver = true;
-					break;
-				default:
-					System.out.println("Unknown command");
-					break;
-				}
-			}
+			if (!processConsoleCommand(br.readLine()))
+				break;			
 		}
 		System.out.println("See you again!");
 		br.readLine();
@@ -102,6 +56,62 @@ public class Table {
 		if ((pos.getY() < 0) || (pos.getY() > MAX_HEIGHT))
 			return false;
 				
+		return true;
+	}
+	
+	/*
+	 * @return: false if do not want to play anymore
+	 * 			true if keep playing
+	 */
+	public static boolean processConsoleCommand(String cmd) {
+		String[] parser;
+		String[] robotState;
+		parser = cmd.split(" ");
+		
+		// PLACE X,Y,F command
+		if ((parser.length == 2) && ("PLACE".equals(parser[0].toUpperCase()))) {
+			robotState = parser[1].split(",");
+			// check enough information for X,Y,F
+			if (robotState.length == 3) {
+				Position placingPos = new Position(Integer.parseInt(robotState[0]), Integer.parseInt(robotState[1]));
+				if (checkValidMove(placingPos)) {
+					robot = Robot.getInstance();
+					robot.place(Integer.parseInt(robotState[0]), 
+							Integer.parseInt(robotState[1]),
+							robotState[2]);
+				}
+			}
+		} else if (parser.length == 1) {
+			switch (cmd.toUpperCase()) {
+			case "LEFT":
+				if (robot != null)
+					robot.left();
+				break;
+			case "RIGHT": 
+				if (robot != null)
+					robot.right();
+				break;
+			case "MOVE":
+				if (robot != null) {
+					robot.move();
+					if (checkValidMove(robot.getPredictPos()))
+						robot.updatePos();
+				}
+				break;
+			case "REPORT":
+				System.out.println(robot);
+				break;
+			case "EXIT":
+				return false;
+			default:
+				System.out.println("Unknown command");
+				break;
+			}
+		}
+		else {
+			System.out.println("Unknown command");
+		}
+		
 		return true;
 	}
 }
