@@ -75,8 +75,10 @@ public class Table {
 		File folder = new File(currentWorkingDir + testDir + folderName);
 		File[] listOfFile = folder.listFiles();
 		for (File file : listOfFile) {
-			if (file.isFile())
-				processFileCommand(file.getName());
+			if (file.isDirectory())
+				processAllFileCommand(folderName + "\\" + file.getName());
+			else if (file.isFile())
+				processFileCommand(folderName + "\\" + file.getName());
 		}
 	}
 	
@@ -87,7 +89,12 @@ public class Table {
 		while (line != null) {
 			if (line.toUpperCase().contains("EXPECTED_OUTPUT")) {
 				String[] expectedOutput = line.split(" ");
-				if (robot.toString().equals(expectedOutput[1].toUpperCase())) {
+				if (robot == null) {
+					if (expectedOutput[1].toUpperCase().equals("NULL")) {
+						System.out.println(fileName + " PASS");
+					}
+				}
+				else if (expectedOutput[1].toUpperCase().equals(robot.toString())) {
 					System.out.println(fileName + " PASS");
 				}
 				else{

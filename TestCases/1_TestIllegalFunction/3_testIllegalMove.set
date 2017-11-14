@@ -1,0 +1,3 @@
+place 1,5,north
+move
+expected_output 1,5,north
