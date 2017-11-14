@@ -38,7 +38,10 @@ public class Table {
 		boolean gameOver = false;
 		while (!gameOver) {
 			str = br.readLine();
-			if (str.contains(".set")) {
+			if (str.contains(".*")) {
+				processAllFileCommand(str.substring(0, str.indexOf(".*")));
+			}
+			else if (str.contains(".set")) {
 				processFileCommand(str);
 			}
 			else {
@@ -66,6 +69,15 @@ public class Table {
 			return false;
 				
 		return true;
+	}
+	
+	public static void processAllFileCommand(String folderName) throws IOException {
+		File folder = new File(currentWorkingDir + testDir + folderName);
+		File[] listOfFile = folder.listFiles();
+		for (File file : listOfFile) {
+			if (file.isFile())
+				processFileCommand(file.getName());
+		}
 	}
 	
 	public static void processFileCommand(String fileName) throws IOException {
