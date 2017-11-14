@@ -1,0 +1,10 @@
+place 1,2,north
+report
+left
+report
+left
+report
+right
+report
+move
+report

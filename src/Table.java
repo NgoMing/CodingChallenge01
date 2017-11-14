@@ -6,6 +6,8 @@ import Utilities.Position;
 public class Table {
 	final static int MAX_WIDTH = 5;
 	final static int MAX_HEIGHT = 5;
+	final static String currentWorkingDir = System.getProperty("user.dir");
+	final static String testDir = "\\src\\TestCases\\";
 	static Robot robot;
 	
 	public static void main(String[] args) throws IOException {
@@ -31,11 +33,18 @@ public class Table {
 	}
 	
 	public static void playGame() throws IOException {
-		BufferedReader  br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str;
 		boolean gameOver = false;
 		while (!gameOver) {
-			if (!processConsoleCommand(br.readLine()))
-				break;			
+			str = br.readLine();
+			if (str.contains(".set")) {
+				processFileCommand(str);
+			}
+			else {
+				if (!processCommandLine(str))
+					break;
+			}
 		}
 		System.out.println("See you again!");
 		br.readLine();
@@ -59,11 +68,35 @@ public class Table {
 		return true;
 	}
 	
+	public static void processFileCommand(String fileName) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(currentWorkingDir + testDir + fileName));
+		String line = br.readLine();
+		
+		while (line != null) {
+			if (line.toUpperCase().contains("EXPECTED_OUTPUT")) {
+				String[] expectedOutput = line.split(" ");
+				if (robot.toString().equals(expectedOutput[1].toUpperCase())) {
+					System.out.println(fileName + " PASS");
+				}
+				else{
+					System.out.println(fileName + " ERROR"); 
+					System.out.println("\texpected output: " + expectedOutput[1].toUpperCase());
+					System.out.println("\t    real output: " + robot);
+				}
+			}
+			else if (!processCommandLine(line))
+				break;
+			line = br.readLine();
+		}
+
+		br.close();
+	}
+	
 	/*
 	 * @return: false if do not want to play anymore
 	 * 			true if keep playing
 	 */
-	public static boolean processConsoleCommand(String cmd) {
+	public static boolean processCommandLine(String cmd) {
 		String[] parser;
 		String[] robotState;
 		parser = cmd.split(" ");
