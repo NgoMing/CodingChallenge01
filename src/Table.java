@@ -35,34 +35,47 @@ public class Table {
 		String str;
 		String[] parser;
 		String[] robotState;
-		while (true) {
+		boolean gameOver = false;
+		while (!gameOver) {
 			str = br.readLine();
-			if (str.contains(" ")) {
-				robot = Robot.getInstance();
-				parser = str.split(" ");
+			parser = str.split(" ");
+			
+			// PLACE X,Y,F command
+			if ((parser.length == 2) && ("PLACE".equals(parser[0].toUpperCase()))) {
 				robotState = parser[1].split(",");
-				robot.place(Integer.parseInt(robotState[0]),
-							Integer.parseInt(robotState[1]));
-				if (checkValidMove(robot.getPredictPos())) {
-					robot.updatePos();
-					robot.updateDir(robotState[2].toUpperCase());
+				// check enough information for X,Y,F
+				if (robotState.length == 3) {
+					robot = Robot.getInstance();
+					robot.place(Integer.parseInt(robotState[0]), Integer.parseInt(robotState[1]));
+					if (checkValidMove(robot.getPredictPos())) {
+						robot.updatePos();
+						robot.updateDir(robotState[2]);
+					}
 				}
-			}
-			else {
-				if ("LEFT".equals(str.toUpperCase()))
+			} else if (parser.length == 1) {
+				switch (str.toUpperCase()) {
+				case "LEFT" : 
 					robot.left();
-				else if ("RIGHT".equals(str.toUpperCase()))
+					break;
+				case "RIGHT": 
 					robot.right();
-				else if ("MOVE".equals(str.toUpperCase())) {
+					break;
+				case "MOVE" :
 					robot.move();
 					if (checkValidMove(robot.getPredictPos()))
 						robot.updatePos();
-				}
-				else if ("REPORT".equals(str.toUpperCase()))
-					System.out.println(robot);
-				else if ("EXIT".equals(str.toUpperCase()))
 					break;
-			}		
+				case "REPORT":
+					System.out.println(robot);
+					break;
+				case "EXIT":
+					gameOver = true;
+					break;
+				default:
+					System.out.println("Unknown command");
+					break;
+				}
+			}
 		}
 		System.out.println("See you again!");
 		br.readLine();
