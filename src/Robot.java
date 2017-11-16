@@ -35,26 +35,15 @@ public class Robot {
 		}
 	}
 	
-	// singleton pattern
-	private Robot() { initDirection(); }
-	public static Robot getInstance(int x, int y, String dir) {
-		if (instance == null) {
-			instance = new Robot();
-		}
-		instance.pos.setX(x);
-		instance.pos.setY(y);
-		instance.changeDirection(dir);
-		return instance;
+	// constructors
+	private Robot() { 
+		initDirection();
+		place(0, 0, "NORTH");
 	}
-	public static Robot getInstance() {
-		if (instance == null) {
-			instance = new Robot();
-		}
-		// set default values
-		instance.pos.setX(0);
-		instance.pos.setY(0);
-		instance.changeDirection("NORTH");
-		return instance;
+	
+	private Robot(int x, int y, String dir) { 
+		initDirection();
+		place(x, y, dir);
 	}
 	
 	// active methods

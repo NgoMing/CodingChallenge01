@@ -10,11 +10,18 @@ public class Table {
 	final static String testDir = "\\src\\TestCases\\";
 	static Robot robot;
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		description();
-		playGame();
+		try {
+			playGame();
+		} catch (IOException e) {
+			System.out.println("IO ERROR: check your io-connection");
+		}
 	}
 	
+	/*
+	 * description of robot simulator
+	 */
 	public static void description() {
 		System.out.println("This is a Robot game");
 		System.out.println("Your can use a list of command to control the robot:");
@@ -32,6 +39,9 @@ public class Table {
 		System.out.println("Any actions will be ignored if you have not placed a robot");
 	}
 	
+	/*
+	 * main function includes all action in the simulator
+	 */
 	public static void playGame() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String str;
@@ -50,13 +60,25 @@ public class Table {
 			}
 		}
 		System.out.println("See you again!");
-		br.readLine();
+		try {
+			System.in.read();
+		} catch (IOException e) { }
 	}
 	
+	/*
+	 * check whether robot will be valid or not, considering some constraints
+	 * @return true if the position is valid
+	 * 		   false if the position is invalid
+	 */
 	public static boolean checkValidMove(Position pos) {
 		return checkValidBoundary(pos);
 	}
 	
+	/*
+	 * check whether robot will be out of the table
+	 * @return true if the position is valid
+	 * 		   false if the position is invalid
+	 */
 	public static boolean checkValidBoundary(Position pos) {
 		if (pos == null) return false;
 		
@@ -71,6 +93,11 @@ public class Table {
 		return true;
 	}
 	
+	/*
+	 * read and process all commands in all files in folder
+	 * @param fileFolder: the name of desired folder
+	 * @throws IOException from processFileCommand functions
+	 */
 	public static void processAllFileCommand(String folderName) throws IOException {
 		File folder = new File(currentWorkingDir + testDir + folderName);
 		File[] listOfFile = folder.listFiles();
@@ -82,11 +109,34 @@ public class Table {
 		}
 	}
 	
+	/*
+	 * read and process all commands in a file
+	 * @param fileName: the name of file where users want to process commands in
+	 * @throws IOException when cannot read line in file  
+	 */
 	public static void processFileCommand(String fileName) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(currentWorkingDir + testDir + fileName));
-		String line = br.readLine();
+		BufferedReader br;
+		try {
+			br = new BufferedReader(new FileReader(currentWorkingDir + testDir + fileName));
+		} catch (FileNotFoundException e) {
+			System.out.println("FILE NOT FOUND: " + currentWorkingDir + testDir + fileName + " is not existed");
+			return;
+		}
+		
+		String line;
+		try {
+			line = br.readLine();
+		} 
+		catch (IOException e) {
+			System.out.println("IO ERROR: check the input-output connection");
+			throw new IOException();
+		} 
+		finally {
+			br.close();
+		}
 		
 		while (line != null) {
+			// process if this file is a test file
 			if (line.toUpperCase().contains("EXPECTED_OUTPUT")) {
 				String[] expectedOutput = line.split(" ");
 				if (robot == null) {
@@ -103,9 +153,20 @@ public class Table {
 					System.out.println("\t    real output: " + robot);
 				}
 			}
+			// process if this is an user file
 			else if (!processCommandLine(line))
 				break;
-			line = br.readLine();
+			
+			try {
+				line = br.readLine();
+			} 
+			catch (IOException e) {
+				System.out.println("IO ERROR: check the input-output connection");
+				throw new IOException();
+			} 
+			finally {
+				br.close();
+			}
 		}
 
 		br.close();
