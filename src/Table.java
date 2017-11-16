@@ -87,19 +87,20 @@ public class Table {
 		String line = br.readLine();
 		
 		while (line != null) {
-			if (line.toUpperCase().contains("EXPECTED_OUTPUT")) {
+			line = line.toUpperCase();
+			if (line.contains("EXPECTED_OUTPUT")) {
 				String[] expectedOutput = line.split(" ");
 				if (robot == null) {
-					if (expectedOutput[1].toUpperCase().equals("NULL")) {
+					if (expectedOutput[1].equals("NULL")) {
 						System.out.println(fileName + " PASS");
 					}
 				}
-				else if (expectedOutput[1].toUpperCase().equals(robot.toString())) {
+				else if (expectedOutput[1].equals(robot.toString())) {
 					System.out.println(fileName + " PASS");
 				}
 				else{
 					System.out.println(fileName + " ERROR"); 
-					System.out.println("\texpected output: " + expectedOutput[1].toUpperCase());
+					System.out.println("\texpected output: " + expectedOutput[1]);
 					System.out.println("\t    real output: " + robot);
 				}
 			}
@@ -118,10 +119,10 @@ public class Table {
 	public static boolean processCommandLine(String cmd) {
 		String[] parser;
 		String[] robotState;
-		parser = cmd.split(" ");
+		parser = cmd.toUpperCase().split(" ");
 		
 		// PLACE X,Y,F command
-		if ((parser.length == 2) && ("PLACE".equals(parser[0].toUpperCase()))) {
+		if ((parser.length == 2) && ("PLACE".equals(parser[0]))) {
 			robotState = parser[1].split(",");
 			// check enough information for X,Y,F
 			if (robotState.length == 3) {
@@ -134,7 +135,7 @@ public class Table {
 				}
 			}
 		} else if (parser.length == 1) {
-			switch (cmd.toUpperCase()) {
+			switch (parser[0]) {
 			case "LEFT":
 				if (robot != null)
 					robot.left();
