@@ -21,8 +21,17 @@ public class CommandProcessor {
 		return delimiters;
 	}
 	
-	public String[] paserLine(String cmd) {
-		String[] result = cmd.split(delimiters);
+	public String[] parserLine(String cmd, boolean upperCase) {
+		String cmdInCase;
+		if (upperCase)
+			cmdInCase = cmd.toUpperCase();
+		else
+			cmdInCase = cmd.toLowerCase();
+		String[] result = cmdInCase.split(delimiters);
 		return result;
+	}
+	
+	public String[] parserLine(String cmd) {
+		return parserLine(cmd, true);
 	}
 }

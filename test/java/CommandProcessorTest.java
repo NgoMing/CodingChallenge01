@@ -21,11 +21,20 @@ public class CommandProcessorTest {
 	}
 
 	@Test
-	public void shouldPaserCorrectly() {
-		CommandProcessor cmd = new CommandProcessor();
-		String str = "Programming Language";
-		String[] strExpected = {"Programming", "Language"};
+	public void shouldPaserInUpperCaseCorrectly() {
+		CommandProcessor cmd = new CommandProcessor("[- ]+");
+		String str = "Java-Programming Language";
+		String[] strExpected = {"JAVA", "PROGRAMMING", "LANGUAGE"};
 		
-		assertArrayEquals(strExpected, cmd.paserLine(str));
+		assertArrayEquals(strExpected, cmd.parserLine(str));
+	}
+	
+	@Test
+	public void shouldPaserInLowerCaseCorrectly() {
+		CommandProcessor cmd = new CommandProcessor("[- ]+");
+		String str = "Java-Programming Language";
+		String[] strExpected = {"java", "programming", "language"};
+		
+		assertArrayEquals(strExpected, cmd.parserLine(str, false));
 	}
 }
