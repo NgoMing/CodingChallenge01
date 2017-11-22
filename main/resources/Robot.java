@@ -5,12 +5,11 @@ import main.java.Position;
 
 public class Robot {
 	// the position of robot
-	Position pos = new Position();											
+	Position pos;											
 	// the position of robot if it move
-	Position predictPos = new Position();									
+	Position predictPos;									
 	// the direction of robot
-	CircularlyLinkedList<DirectionState> direction = new CircularlyLinkedList<>();	
-	private static Robot instance;
+	CircularlyLinkedList<DirectionState> direction;	
 	
 	// access methods
 	public Position getPos() { return pos; }
@@ -18,6 +17,7 @@ public class Robot {
 	public DirectionState getCurrentDirection() { return direction.first(); }
 	
 	private void initDirection() {
+		direction = new CircularlyLinkedList<>();
 		direction.addFirst(new DirectionState("EAST",  new Position( 1,  0)));
 		direction.addFirst(new DirectionState("SOUTH", new Position( 0, -1)));
 		direction.addFirst(new DirectionState("WEST",  new Position(-1,  0)));
@@ -36,32 +36,38 @@ public class Robot {
 		}
 	}
 	
-	// singleton pattern
-	private Robot() { initDirection(); }
-	public static Robot getInstance(int x, int y, String dir) {
-		if (instance == null) {
-			instance = new Robot();
-		}
-		instance.pos.setX(x);
-		instance.pos.setY(y);
-		instance.changeDirection(dir);
-		return instance;
+	//constructors
+	public Robot() { 
+		initDirection();
+		pos = new Position();
+		predictPos = new Position();
+		changeDirection("NORTH");
 	}
-	public static Robot getInstance() {
-		if (instance == null) {
-			instance = new Robot();
-		}
-		// set default values
-		instance.pos.setX(0);
-		instance.pos.setY(0);
-		instance.changeDirection("NORTH");
-		return instance;
+	
+	public Robot(int x, int y, String dir) {
+		initDirection();
+		pos = new Position(x, y);
+		predictPos = pos;
+		changeDirection(dir);
 	}
+	
+	public Robot(Position pos, String dir) {
+		initDirection();
+		this.pos = pos;
+		this.predictPos = this.pos;
+		changeDirection(dir);
+	}
+	
 	
 	// active methods
 	public void place(int x, int y, String dir) {
 		pos.setX(x);
 		pos.setY(y);
+		changeDirection(dir);
+	}
+	
+	public void place(Position pos, String dir) {
+		this.pos = pos;
 		changeDirection(dir);
 	}
 	

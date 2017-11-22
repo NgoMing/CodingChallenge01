@@ -1,66 +1,84 @@
 package main.resources;
 import java.io.*;
 
+import main.java.CommandProcessor;
 import main.java.Position;
 
 public class Table {
-	final static int MAX_WIDTH = 5;
-	final static int MAX_HEIGHT = 5;
+	final static int DEFAULT_HEIGHT = 5;
+	final static int DEFAULT_WIDTH = 5;
 	final static String currentWorkingDir = System.getProperty("user.dir");
 	final static String testDir = "\\src\\TestCases\\";
-	static Robot robot;
 	
-	public static void playGame() throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String str;
-		boolean gameOver = false;
-		while (!gameOver) {
-			str = br.readLine();
-			if (str.contains(".*")) {
-				processAllFileCommand(str.substring(0, str.indexOf(".*")));
-			}
-			else if (str.contains(".set")) {
-				processFileCommand(str);
-			}
-			else {
-				if (!processCommandLine(str))
-					break;
+	private int height;
+	private int width;
+	private Robot robot;
+	private CommandProcessor cmd;
+	
+	// constructors
+	public Table () {
+		setSize(DEFAULT_HEIGHT, DEFAULT_WIDTH);
+		cmd = new CommandProcessor("[, ]+");
+	}
+	
+	public Table(int heigth, int width) {
+		setSize(heigth, width);
+		cmd = new CommandProcessor("[, ]+");
+	}
+	
+	// access methods
+	public int getHeight() { return height; }
+	public int getWidth() { return width; }
+	
+	// update methods
+	public void setSize(int height, int width) {
+		setHeight(height);
+		setWidth(width);
+	}
+	
+	public void setHeight(int height) { this.height = height; }
+	public void setWidth(int width) { this.width = width; }
+	
+	// process command line
+	public void processCommandLine(String robotCmd) {
+		
+		String[] parser = cmd.parserLine(robotCmd);
+		int size = parser.length;
+		
+		// process robot command line
+		// PLACE X,Y,F
+		if ((size == 4) && "PLACE".equals(parser[0])) {
+			Position placingPos = new Position(Integer.parseInt(parser[1]), Integer.parseInt(parser[2]));
+			if (checkValidMove(placingPos)) {
+				robot = new Robot(placingPos, parser[3]);
 			}
 		}
-		System.out.println("See you again!");
-		br.readLine();
-	}
-	
-	public static boolean checkValidMove(Position pos) {
-		return checkValidBoundary(pos);
-	}
-	
-	public static boolean checkValidBoundary(Position pos) {
-		if (pos == null) return false;
-		
-		// check horizontal axis
-		if ((pos.getX() < 0) || (pos.getX() > MAX_WIDTH))
-			return false;
-		
-		// check vertical axis
-		if ((pos.getY() < 0) || (pos.getY() > MAX_HEIGHT))
-			return false;
-				
-		return true;
-	}
-	
-	public static void processAllFileCommand(String folderName) throws IOException {
-		File folder = new File(currentWorkingDir + testDir + folderName);
-		File[] listOfFile = folder.listFiles();
-		for (File file : listOfFile) {
-			if (file.isDirectory())
-				processAllFileCommand(folderName + "\\" + file.getName());
-			else if (file.isFile())
-				processFileCommand(folderName + "\\" + file.getName());
+		// RIGHT
+		else if ((size == 1) && "RIGHT".equals(parser[0])) {
+			if (robot != null)
+				robot.right();
 		}
+		// LEFT
+		else if ((size == 1) && "LEFT".equals(parser[0])) {
+			if (robot != null)
+				robot.left();
+		}
+		// MOVE
+		else if ((size == 1) && "MOVE".equals(parser[0])) {
+			if (robot != null) {
+				robot.move();
+				if (checkValidMove(robot.getPredictPos()))
+					robot.updatePos();
+			}
+		}
+		// REPORT
+		else if ((size == 1) && "REPORT".equals(parser[0])) {
+			System.out.println(robot);
+		}	
 	}
 	
-	public static void processFileCommand(String fileName) throws IOException {
+	// process lines in a file
+	public void processCommandLinesInFile(String fileName) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(currentWorkingDir + testDir + fileName));
 		String line = br.readLine();
 		
@@ -82,67 +100,58 @@ public class Table {
 					System.out.println("\t    real output: " + robot);
 				}
 			}
-			else if (!processCommandLine(line))
-				break;
+			else {
+				processCommandLine(line);
+			}
 			line = br.readLine();
 		}
 
 		br.close();
 	}
 	
-	/*
-	 * @return: false if do not want to play anymore
-	 * 			true if keep playing
-	 */
-	public static boolean processCommandLine(String cmd) {
-		String[] parser;
-		String[] robotState;
-		parser = cmd.toUpperCase().split(" ");
-		
-		// PLACE X,Y,F command
-		if ((parser.length == 2) && ("PLACE".equals(parser[0]))) {
-			robotState = parser[1].split(",");
-			// check enough information for X,Y,F
-			if (robotState.length == 3) {
-				Position placingPos = new Position(Integer.parseInt(robotState[0]), Integer.parseInt(robotState[1]));
-				if (checkValidMove(placingPos)) {
-					robot = Robot.getInstance();
-					robot.place(Integer.parseInt(robotState[0]), 
-							Integer.parseInt(robotState[1]),
-							robotState[2]);
-				}
+	public void processCommandLinesInAllFiles(String folderName) throws IOException {
+		File folder = new File(currentWorkingDir + testDir + folderName);
+		File[] listOfFile = folder.listFiles();
+		for (File file : listOfFile) {
+			if (file.isDirectory())
+				processCommandLinesInAllFiles(folderName + "\\" + file.getName());
+			else if (file.isFile())
+				processCommandLinesInFile(folderName + "\\" + file.getName());
+		}
+	}
+	
+	public void processCommand() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str;
+		while (true) {
+			str = br.readLine();
+			if (str.contains(".*")) {
+				processCommandLinesInAllFiles(str.substring(0, str.indexOf(".*")));
 			}
-		} else if (parser.length == 1) {
-			switch (parser[0]) {
-			case "LEFT":
-				if (robot != null)
-					robot.left();
-				break;
-			case "RIGHT": 
-				if (robot != null)
-					robot.right();
-				break;
-			case "MOVE":
-				if (robot != null) {
-					robot.move();
-					if (checkValidMove(robot.getPredictPos()))
-						robot.updatePos();
-				}
-				break;
-			case "REPORT":
-				System.out.println(robot);
-				break;
-			case "EXIT":
-				return false;
-			default:
-				System.out.println("Unknown command");
-				break;
+			else if (str.contains(".set")) {
+				processCommandLinesInFile(str);
+			}
+			else {
+				processCommandLine(str);
 			}
 		}
-		else {
-			System.out.println("Unknown command");
-		}
+	}
+	
+	public  boolean checkValidMove(Position pos) {
+		return checkValidBoundary(pos);
+	}
+	
+	public  boolean checkValidBoundary(Position pos) {
+		if (pos == null) return false;
 		
+		// check horizontal axis
+		if ((pos.getX() < 0) || (pos.getX() > width))
+			return false;
+		
+		// check vertical axis
+		if ((pos.getY() < 0) || (pos.getY() > height))
+			return false;
+				
 		return true;
 	}
 }
