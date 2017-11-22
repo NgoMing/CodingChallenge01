@@ -1,10 +1,10 @@
-package Test;
+package test.java;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Utilities.CircularlyLinkedList;
+import main.java.CircularlyLinkedList;
 
 public class CircularlyLinkedListTest {
 

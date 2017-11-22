@@ -1,10 +1,10 @@
-package Test;
+package test.java;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Utilities.Position;
+import main.java.Position;
 
 public class PositionTest {
 

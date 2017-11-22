@@ -1,9 +1,9 @@
-package Test;
+package test.java;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Utilities.Node;
+import main.java.Node;
 
 public class NodeTest {
 	

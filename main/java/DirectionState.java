@@ -1,5 +1,4 @@
-package src;
-import Utilities.Position;
+package main.java;
 
 /*
  * This class includes the direction and 

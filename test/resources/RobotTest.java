@@ -1,10 +1,10 @@
-package Test;
+package test.resources;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Utilities.Position;
-import src.Robot;
+import main.java.Position;
+import main.resources.Robot;
 
 public class RobotTest {
 

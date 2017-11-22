@@ -1,7 +1,7 @@
-package src;
+package main.resources;
 import java.io.*;
 
-import Utilities.Position;
+import main.java.Position;
 
 public class Table {
 	final static int MAX_WIDTH = 5;
