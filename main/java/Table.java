@@ -1,8 +1,5 @@
-package main.resources;
+package main.java;
 import java.io.*;
-
-import main.java.CommandProcessor;
-import main.java.Position;
 
 public class Table {
 	final static int DEFAULT_HEIGHT = 5;

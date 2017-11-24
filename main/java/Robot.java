@@ -1,7 +1,4 @@
-package main.resources;
-import main.java.CircularlyLinkedList;
-import main.java.DirectionState;
-import main.java.Position;
+package main.java;
 
 public class Robot {
 	// the position of robot
