@@ -1,10 +1,10 @@
-package test.java;
+package com.nm.toyRobot.utilities;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import main.java.CommandProcessor;
+import com.nm.toyRobot.utilities.CommandProcessor;
 
 public class CommandProcessorTest {
 

@@ -1,6 +1,7 @@
-package main.java;
+package com.nm.toyRobot.app.java;
 
 import java.io.IOException;
+import com.nm.toyRobot.models.table.Table;
 
 public class RobotSimulator {
 	static Table table;

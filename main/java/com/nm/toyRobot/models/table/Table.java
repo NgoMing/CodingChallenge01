@@ -1,9 +1,13 @@
-package main.java;
+package com.nm.toyRobot.models.table;
 import java.io.*;
 
+import com.nm.toyRobot.utilities.Position;
+import com.nm.toyRobot.utilities.CommandProcessor;
+import com.nm.toyRobot.models.robot.Robot;
+
 public class Table {
-	final static int DEFAULT_HEIGHT = 5;
-	final static int DEFAULT_WIDTH = 5;
+	public final static int DEFAULT_HEIGHT = 5;
+	public final static int DEFAULT_WIDTH = 5;
 	final static String currentWorkingDir = System.getProperty("user.dir");
 	final static String testDir = "\\src\\TestCases\\";
 	

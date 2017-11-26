@@ -1,4 +1,4 @@
-package main.java;
+package com.nm.toyRobot.utilities;
 
 /*
  * This class includes the direction and 

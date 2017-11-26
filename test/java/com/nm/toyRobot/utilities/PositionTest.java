@@ -1,10 +1,10 @@
-package test.java;
+package com.nm.toyRobot.utilities;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import main.java.Position;
+import com.nm.toyRobot.utilities.Position;
 
 public class PositionTest {
 

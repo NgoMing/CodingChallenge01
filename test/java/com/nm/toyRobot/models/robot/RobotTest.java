@@ -1,10 +1,9 @@
-package test.java;
+package com.nm.toyRobot.models.robot;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import main.java.Position;
-import main.java.Robot;
+import com.nm.toyRobot.utilities.Position;
 
 public class RobotTest {
 

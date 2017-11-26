@@ -1,4 +1,4 @@
-package main.java;
+package com.nm.toyRobot.utilities;
 
 /*
  * Circular Linked List is used for direction of robot 
@@ -71,6 +71,7 @@ public class CircularlyLinkedList<E> {
 	/*
 	 * convert Singly Linked List to array
 	 */
+	@SuppressWarnings("unchecked")
 	public E[] toArray() {
 		E[] array = (E[])new Object[this.size];
 		if (isEmpty())

@@ -1,4 +1,4 @@
-package main.java;
+package com.nm.toyRobot.utilities;
 
 public class CommandProcessor {
 	final private String DEFAULT_DELIMITERS = " ";

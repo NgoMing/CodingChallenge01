@@ -1,4 +1,5 @@
-package main.java;
+package com.nm.toyRobot.models.robot;
+import com.nm.toyRobot.utilities.*;
 
 public class Robot {
 	// the position of robot
